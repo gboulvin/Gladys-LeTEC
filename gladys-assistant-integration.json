@@ -1,0 +1,1201 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "TEC",
+  "description": {
+    "en": "Next TEC bus, tram and metro departures in Wallonia, with live delays and disruptions.",
+    "fr": "Prochains bus, trams et métros TEC en Wallonie : retards en direct et perturbations.",
+    "de": "Nächste TEC-Busse, Trams und Metros in der Wallonie: Live-Verspätungen und Störungen.",
+    "es": "Próximos buses, tranvías y metros TEC en Valonia: retrasos en directo e incidencias."
+  },
+  "version": "0.0.0",
+  "docker_image": "ghcr.io/gboulvin/letec:0.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/LeTEC/main/cover.png",
+  "categories": ["services"],
+  "transports": ["cloud"],
+  "location": true,
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "TEC real-time data",
+        "fr": "Temps réel TEC",
+        "de": "TEC-Echtzeitdaten",
+        "es": "Tiempo real de TEC"
+      },
+      "description": {
+        "en": "The timetable comes from the TEC open data (no account). Delays, cancellations and disruptions come from the Belgian Mobility open data portal: it works without a key (refreshed every 20 minutes), but a free key from its developer portal allows a refresh every minute.",
+        "fr": "Les horaires viennent de l'open data du TEC (sans compte). Retards, suppressions et perturbations viennent du portail open data Belgian Mobility : il fonctionne sans clé (rafraîchi toutes les 20 minutes), mais une clé gratuite de son portail développeur permet un rafraîchissement chaque minute.",
+        "de": "Der Fahrplan stammt aus den Open Data des TEC (ohne Konto). Verspätungen, Ausfälle und Störungen stammen vom Open-Data-Portal Belgian Mobility: Es funktioniert ohne Schlüssel (Aktualisierung alle 20 Minuten), ein kostenloser Schlüssel aus seinem Entwicklerportal erlaubt jedoch eine Aktualisierung jede Minute.",
+        "es": "Los horarios proceden de los datos abiertos de TEC (sin cuenta). Retrasos, cancelaciones e incidencias proceden del portal de datos abiertos Belgian Mobility: funciona sin clave (actualización cada 20 minutos), pero una clave gratuita de su portal para desarrolladores permite actualizar cada minuto."
+      },
+      "links": [
+        {
+          "url": "https://api-management-opendata-production.developer.azure-api.net/signup",
+          "label": {
+            "en": "Get a free API key",
+            "fr": "Obtenir une clé d'API gratuite",
+            "de": "Kostenlosen API-Schlüssel erhalten",
+            "es": "Obtener una clave de API gratuita"
+          }
+        },
+        {
+          "url": "https://data.belgianmobility.io/en/data.html?agency=tec",
+          "label": {
+            "en": "Belgian Mobility open data",
+            "fr": "Open data Belgian Mobility",
+            "de": "Open Data Belgian Mobility",
+            "es": "Datos abiertos Belgian Mobility"
+          }
+        }
+      ]
+    },
+    {
+      "key": "api_key",
+      "type": "secret",
+      "label": {
+        "en": "API key (optional)",
+        "fr": "Clé d'API (facultative)",
+        "de": "API-Schlüssel (optional)",
+        "es": "Clave de API (opcional)"
+      },
+      "description": {
+        "en": "Primary key of your Belgian Mobility subscription.",
+        "fr": "Clé primaire de votre abonnement Belgian Mobility.",
+        "de": "Primärschlüssel Ihres Belgian-Mobility-Abonnements.",
+        "es": "Clave principal de su suscripción a Belgian Mobility."
+      },
+      "placeholder": {
+        "en": "Subscription key",
+        "fr": "Clé d'abonnement",
+        "de": "Abonnementschlüssel",
+        "es": "Clave de suscripción"
+      },
+      "required": false
+    },
+    {
+      "key": "stops_intro",
+      "type": "section",
+      "label": {
+        "en": "Stops to monitor",
+        "fr": "Arrêts à surveiller",
+        "de": "Zu überwachende Haltestellen",
+        "es": "Paradas a vigilar"
+      },
+      "description": {
+        "en": "Each stop has one code per direction. Find yours with the \"Search for a stop\" or \"Stops near my home\" buttons below, then list the codes separated by commas. To keep only some lines, add them after a colon: CMpa1:M2+M4.",
+        "fr": "Chaque arrêt a un code par sens de circulation. Trouvez le vôtre avec les boutons « Rechercher un arrêt » ou « Arrêts près de chez moi » ci-dessous, puis listez les codes séparés par des virgules. Pour ne garder que certaines lignes, ajoutez-les après deux-points : CMpa1:M2+M4.",
+        "de": "Jede Haltestelle hat einen Code pro Fahrtrichtung. Finden Sie Ihren mit den Schaltflächen „Haltestelle suchen\" oder „Haltestellen in meiner Nähe\" unten und listen Sie die Codes durch Kommas getrennt auf. Um nur bestimmte Linien zu behalten, fügen Sie sie nach einem Doppelpunkt hinzu: CMpa1:M2+M4.",
+        "es": "Cada parada tiene un código por sentido. Encuentre el suyo con los botones «Buscar una parada» o «Paradas cerca de mi casa» más abajo y enumere los códigos separados por comas. Para conservar solo algunas líneas, añádalas tras dos puntos: CMpa1:M2+M4."
+      }
+    },
+    {
+      "key": "stops",
+      "type": "string",
+      "label": {
+        "en": "Stops",
+        "fr": "Arrêts",
+        "de": "Haltestellen",
+        "es": "Paradas"
+      },
+      "description": {
+        "en": "Stop codes, separated by commas (20 at most).",
+        "fr": "Codes des arrêts, séparés par des virgules (20 au maximum).",
+        "de": "Haltestellencodes, durch Kommas getrennt (höchstens 20).",
+        "es": "Códigos de parada separados por comas (20 como máximo)."
+      },
+      "placeholder": {
+        "en": "e.g. CMpa1, Ctrrpla2:61+82",
+        "fr": "ex. CMpa1, Ctrrpla2:61+82",
+        "de": "z. B. CMpa1, Ctrrpla2:61+82",
+        "es": "p. ej. CMpa1, Ctrrpla2:61+82"
+      },
+      "required": false,
+      "default": ""
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
+      "description": {
+        "en": "Language of the names and texts written in the devices.",
+        "fr": "Langue des noms et des textes écrits dans les appareils.",
+        "de": "Sprache der Namen und Texte in den Geräten.",
+        "es": "Idioma de los nombres y textos escritos en los dispositivos."
+      },
+      "required": false,
+      "default": "fr",
+      "options": [
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ]
+    },
+    {
+      "key": "refresh_interval",
+      "type": "number",
+      "label": {
+        "en": "Real-time refresh (s)",
+        "fr": "Rafraîchissement temps réel (s)",
+        "de": "Echtzeit-Aktualisierung (s)",
+        "es": "Actualización en tiempo real (s)"
+      },
+      "description": {
+        "en": "With an API key only; without one, every 20 minutes.",
+        "fr": "Avec une clé d'API uniquement ; sans clé, toutes les 20 minutes.",
+        "de": "Nur mit API-Schlüssel; ohne alle 20 Minuten.",
+        "es": "Solo con clave de API; sin ella, cada 20 minutos."
+      },
+      "required": false,
+      "default": 60,
+      "min": 30,
+      "max": 3600
+    },
+    {
+      "key": "horizon_minutes",
+      "type": "number",
+      "label": {
+        "en": "Departures shown (minutes ahead)",
+        "fr": "Départs affichés (minutes à venir)",
+        "de": "Angezeigte Abfahrten (Minuten voraus)",
+        "es": "Salidas mostradas (minutos)"
+      },
+      "required": false,
+      "default": 90,
+      "min": 15,
+      "max": 240
+    },
+    {
+      "key": "delay_threshold",
+      "type": "number",
+      "label": {
+        "en": "Delay alert from (minutes)",
+        "fr": "Alerte de retard à partir de (minutes)",
+        "de": "Verspätungsalarm ab (Minuten)",
+        "es": "Aviso de retraso desde (minutos)"
+      },
+      "description": {
+        "en": "Delay that fires the \"Departure delayed\" scene trigger.",
+        "fr": "Retard qui déclenche le déclencheur de scène « Départ en retard ».",
+        "de": "Verspätung, die den Szenenauslöser „Abfahrt verspätet\" auslöst.",
+        "es": "Retraso que activa el disparador de escena «Salida retrasada»."
+      },
+      "required": false,
+      "default": 5,
+      "min": 1,
+      "max": 60
+    }
+  ],
+  "actions": [
+    {
+      "key": "search_stop",
+      "label": {
+        "en": "Search for a stop",
+        "fr": "Rechercher un arrêt",
+        "de": "Haltestelle suchen",
+        "es": "Buscar una parada"
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "query",
+          "type": "string",
+          "label": {
+            "en": "Stop name",
+            "fr": "Nom de l'arrêt",
+            "de": "Name der Haltestelle",
+            "es": "Nombre de la parada"
+          },
+          "placeholder": {
+            "en": "e.g. Charleroi Gare Centrale",
+            "fr": "ex. Charleroi Gare Centrale",
+            "de": "z. B. Charleroi Gare Centrale",
+            "es": "p. ej. Charleroi Gare Centrale"
+          },
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "nearby_stops",
+      "label": {
+        "en": "Stops near my home",
+        "fr": "Arrêts près de chez moi",
+        "de": "Haltestellen in meiner Nähe",
+        "es": "Paradas cerca de mi casa"
+      },
+      "description": {
+        "en": "Uses the location of your houses in Gladys.",
+        "fr": "Utilise la position de vos maisons dans Gladys.",
+        "de": "Verwendet den Standort Ihrer Häuser in Gladys.",
+        "es": "Usa la ubicación de sus casas en Gladys."
+      },
+      "timeout_seconds": 30
+    },
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 60
+    },
+    {
+      "key": "refresh_timetable",
+      "label": {
+        "en": "Update the timetable now",
+        "fr": "Mettre à jour les horaires",
+        "de": "Fahrplan jetzt aktualisieren",
+        "es": "Actualizar los horarios ahora"
+      },
+      "timeout_seconds": 120
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "departure_soon",
+      "label": {
+        "en": "TEC departure soon",
+        "fr": "Départ TEC imminent",
+        "de": "TEC-Abfahrt bald",
+        "es": "Salida TEC inminente"
+      },
+      "description": {
+        "en": "A bus, tram or metro leaves a monitored stop in N minutes.",
+        "fr": "Un bus, tram ou métro part d'un arrêt surveillé dans N minutes.",
+        "de": "Ein Bus, eine Tram oder Metro fährt in N Minuten von einer überwachten Haltestelle ab.",
+        "es": "Un bus, tranvía o metro sale de una parada vigilada en N minutos."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "multi_select",
+          "label": {
+            "en": "Minutes before departure",
+            "fr": "Minutes avant le départ",
+            "de": "Minuten vor der Abfahrt",
+            "es": "Minutos antes de la salida"
+          },
+          "options": [
+            {
+              "value": "1",
+              "label": {
+                "en": "1 min",
+                "fr": "1 min",
+                "de": "1 Min.",
+                "es": "1 min"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "en": "2 min",
+                "fr": "2 min",
+                "de": "2 Min.",
+                "es": "2 min"
+              }
+            },
+            {
+              "value": "3",
+              "label": {
+                "en": "3 min",
+                "fr": "3 min",
+                "de": "3 Min.",
+                "es": "3 min"
+              }
+            },
+            {
+              "value": "4",
+              "label": {
+                "en": "4 min",
+                "fr": "4 min",
+                "de": "4 Min.",
+                "es": "4 min"
+              }
+            },
+            {
+              "value": "5",
+              "label": {
+                "en": "5 min",
+                "fr": "5 min",
+                "de": "5 Min.",
+                "es": "5 min"
+              }
+            },
+            {
+              "value": "6",
+              "label": {
+                "en": "6 min",
+                "fr": "6 min",
+                "de": "6 Min.",
+                "es": "6 min"
+              }
+            },
+            {
+              "value": "7",
+              "label": {
+                "en": "7 min",
+                "fr": "7 min",
+                "de": "7 Min.",
+                "es": "7 min"
+              }
+            },
+            {
+              "value": "8",
+              "label": {
+                "en": "8 min",
+                "fr": "8 min",
+                "de": "8 Min.",
+                "es": "8 min"
+              }
+            },
+            {
+              "value": "9",
+              "label": {
+                "en": "9 min",
+                "fr": "9 min",
+                "de": "9 Min.",
+                "es": "9 min"
+              }
+            },
+            {
+              "value": "10",
+              "label": {
+                "en": "10 min",
+                "fr": "10 min",
+                "de": "10 Min.",
+                "es": "10 min"
+              }
+            },
+            {
+              "value": "12",
+              "label": {
+                "en": "12 min",
+                "fr": "12 min",
+                "de": "12 Min.",
+                "es": "12 min"
+              }
+            },
+            {
+              "value": "15",
+              "label": {
+                "en": "15 min",
+                "fr": "15 min",
+                "de": "15 Min.",
+                "es": "15 min"
+              }
+            },
+            {
+              "value": "20",
+              "label": {
+                "en": "20 min",
+                "fr": "20 min",
+                "de": "20 Min.",
+                "es": "20 min"
+              }
+            },
+            {
+              "value": "25",
+              "label": {
+                "en": "25 min",
+                "fr": "25 min",
+                "de": "25 Min.",
+                "es": "25 min"
+              }
+            },
+            {
+              "value": "30",
+              "label": {
+                "en": "30 min",
+                "fr": "30 min",
+                "de": "30 Min.",
+                "es": "30 min"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          }
+        },
+        {
+          "key": "destination",
+          "type": "string",
+          "label": {
+            "en": "Destination",
+            "fr": "Destination",
+            "de": "Ziel",
+            "es": "Destino"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "string",
+          "label": {
+            "en": "Minutes before departure",
+            "fr": "Minutes avant le départ",
+            "de": "Minuten vor der Abfahrt",
+            "es": "Minutos antes de la salida"
+          }
+        },
+        {
+          "key": "expected_time",
+          "type": "string",
+          "label": {
+            "en": "Expected time",
+            "fr": "Heure estimée",
+            "de": "Erwartete Zeit",
+            "es": "Hora estimada"
+          }
+        },
+        {
+          "key": "scheduled_time",
+          "type": "string",
+          "label": {
+            "en": "Scheduled time",
+            "fr": "Heure prévue",
+            "de": "Planmäßige Zeit",
+            "es": "Hora prevista"
+          }
+        },
+        {
+          "key": "delay_minutes",
+          "type": "number",
+          "label": {
+            "en": "Delay (minutes)",
+            "fr": "Retard (minutes)",
+            "de": "Verspätung (Minuten)",
+            "es": "Retraso (minutos)"
+          }
+        },
+        {
+          "key": "stop_name",
+          "type": "string",
+          "label": {
+            "en": "Stop name",
+            "fr": "Nom de l'arrêt",
+            "de": "Name der Haltestelle",
+            "es": "Nombre de la parada"
+          }
+        },
+        {
+          "key": "realtime",
+          "type": "boolean",
+          "label": {
+            "en": "Real-time data",
+            "fr": "Données temps réel",
+            "de": "Echtzeitdaten",
+            "es": "Datos en tiempo real"
+          }
+        }
+      ]
+    },
+    {
+      "key": "departure_delayed",
+      "label": {
+        "en": "TEC departure delayed",
+        "fr": "Départ TEC en retard",
+        "de": "TEC-Abfahrt verspätet",
+        "es": "Salida TEC retrasada"
+      },
+      "description": {
+        "en": "A departure within the hour is late by at least the configured delay.",
+        "fr": "Un départ dans l'heure a au moins le retard configuré.",
+        "de": "Eine Abfahrt innerhalb der Stunde hat mindestens die eingestellte Verspätung.",
+        "es": "Una salida en la próxima hora lleva al menos el retraso configurado."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          }
+        },
+        {
+          "key": "destination",
+          "type": "string",
+          "label": {
+            "en": "Destination",
+            "fr": "Destination",
+            "de": "Ziel",
+            "es": "Destino"
+          }
+        },
+        {
+          "key": "delay_minutes",
+          "type": "number",
+          "label": {
+            "en": "Delay (minutes)",
+            "fr": "Retard (minutes)",
+            "de": "Verspätung (Minuten)",
+            "es": "Retraso (minutos)"
+          }
+        },
+        {
+          "key": "scheduled_time",
+          "type": "string",
+          "label": {
+            "en": "Scheduled time",
+            "fr": "Heure prévue",
+            "de": "Planmäßige Zeit",
+            "es": "Hora prevista"
+          }
+        },
+        {
+          "key": "expected_time",
+          "type": "string",
+          "label": {
+            "en": "Expected time",
+            "fr": "Heure estimée",
+            "de": "Erwartete Zeit",
+            "es": "Hora estimada"
+          }
+        },
+        {
+          "key": "stop_name",
+          "type": "string",
+          "label": {
+            "en": "Stop name",
+            "fr": "Nom de l'arrêt",
+            "de": "Name der Haltestelle",
+            "es": "Nombre de la parada"
+          }
+        }
+      ]
+    },
+    {
+      "key": "departure_cancelled",
+      "label": {
+        "en": "TEC departure cancelled",
+        "fr": "Départ TEC supprimé",
+        "de": "TEC-Abfahrt fällt aus",
+        "es": "Salida TEC cancelada"
+      },
+      "description": {
+        "en": "A departure within the hour is cancelled or no longer serves the stop.",
+        "fr": "Un départ dans l'heure est supprimé ou ne dessert plus l'arrêt.",
+        "de": "Eine Abfahrt innerhalb der Stunde fällt aus oder hält nicht mehr.",
+        "es": "Una salida en la próxima hora se cancela o ya no para."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          }
+        },
+        {
+          "key": "destination",
+          "type": "string",
+          "label": {
+            "en": "Destination",
+            "fr": "Destination",
+            "de": "Ziel",
+            "es": "Destino"
+          }
+        },
+        {
+          "key": "scheduled_time",
+          "type": "string",
+          "label": {
+            "en": "Scheduled time",
+            "fr": "Heure prévue",
+            "de": "Planmäßige Zeit",
+            "es": "Hora prevista"
+          }
+        },
+        {
+          "key": "stop_name",
+          "type": "string",
+          "label": {
+            "en": "Stop name",
+            "fr": "Nom de l'arrêt",
+            "de": "Name der Haltestelle",
+            "es": "Nombre de la parada"
+          }
+        }
+      ]
+    },
+    {
+      "key": "disruption_started",
+      "label": {
+        "en": "New TEC disruption",
+        "fr": "Nouvelle perturbation TEC",
+        "de": "Neue TEC-Störung",
+        "es": "Nueva incidencia TEC"
+      },
+      "description": {
+        "en": "A new alert (works, detour, strike...) concerns a monitored stop.",
+        "fr": "Une nouvelle alerte (travaux, déviation, grève...) concerne un arrêt surveillé.",
+        "de": "Eine neue Meldung (Bauarbeiten, Umleitung, Streik...) betrifft eine überwachte Haltestelle.",
+        "es": "Un nuevo aviso (obras, desvío, huelga...) afecta a una parada vigilada."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          }
+        },
+        {
+          "key": "stop_name",
+          "type": "string",
+          "label": {
+            "en": "Stop name",
+            "fr": "Nom de l'arrêt",
+            "de": "Name der Haltestelle",
+            "es": "Nombre de la parada"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "label": {
+            "en": "Description",
+            "fr": "Description",
+            "de": "Beschreibung",
+            "es": "Descripción"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Link",
+            "fr": "Lien",
+            "de": "Link",
+            "es": "Enlace"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_next_departure",
+      "label": {
+        "en": "Get the next TEC departure",
+        "fr": "Obtenir le prochain départ TEC",
+        "de": "Nächste TEC-Abfahrt abrufen",
+        "es": "Obtener la próxima salida TEC"
+      },
+      "description": {
+        "en": "Line, destination and minutes of the next departure, for a message.",
+        "fr": "Ligne, destination et minutes du prochain départ, pour un message.",
+        "de": "Linie, Ziel und Minuten der nächsten Abfahrt, für eine Nachricht.",
+        "es": "Línea, destino y minutos de la próxima salida, para un mensaje."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          },
+          "required": true
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "found",
+          "type": "boolean",
+          "label": {
+            "en": "Departure found",
+            "fr": "Départ trouvé",
+            "de": "Abfahrt gefunden",
+            "es": "Salida encontrada"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          }
+        },
+        {
+          "key": "destination",
+          "type": "string",
+          "label": {
+            "en": "Destination",
+            "fr": "Destination",
+            "de": "Ziel",
+            "es": "Destino"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "label": {
+            "en": "Minutes before departure",
+            "fr": "Minutes avant le départ",
+            "de": "Minuten vor der Abfahrt",
+            "es": "Minutos antes de la salida"
+          }
+        },
+        {
+          "key": "expected_time",
+          "type": "string",
+          "label": {
+            "en": "Expected time",
+            "fr": "Heure estimée",
+            "de": "Erwartete Zeit",
+            "es": "Hora estimada"
+          }
+        },
+        {
+          "key": "scheduled_time",
+          "type": "string",
+          "label": {
+            "en": "Scheduled time",
+            "fr": "Heure prévue",
+            "de": "Planmäßige Zeit",
+            "es": "Hora prevista"
+          }
+        },
+        {
+          "key": "delay_minutes",
+          "type": "number",
+          "label": {
+            "en": "Delay (minutes)",
+            "fr": "Retard (minutes)",
+            "de": "Verspätung (Minuten)",
+            "es": "Retraso (minutos)"
+          }
+        },
+        {
+          "key": "realtime",
+          "type": "boolean",
+          "label": {
+            "en": "Real-time data",
+            "fr": "Données temps réel",
+            "de": "Echtzeitdaten",
+            "es": "Datos en tiempo real"
+          }
+        },
+        {
+          "key": "following_minutes",
+          "type": "number",
+          "label": {
+            "en": "Following departure (minutes)",
+            "fr": "Départ suivant (minutes)",
+            "de": "Übernächste Abfahrt (Minuten)",
+            "es": "Salida siguiente (minutos)"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "get_line_disruptions",
+      "label": {
+        "en": "Check a TEC line",
+        "fr": "Vérifier une ligne TEC",
+        "de": "TEC-Linie prüfen",
+        "es": "Comprobar una línea TEC"
+      },
+      "description": {
+        "en": "Whether a line is disrupted right now (works, detour, strike...).",
+        "fr": "Si une ligne est perturbée en ce moment (travaux, déviation, grève...).",
+        "de": "Ob eine Linie gerade gestört ist (Bauarbeiten, Umleitung, Streik...).",
+        "es": "Si una línea tiene incidencias ahora (obras, desvío, huelga...)."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          },
+          "required": true
+        },
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop (to tell apart lines with the same number)",
+            "fr": "Arrêt (pour distinguer les lignes de même numéro)",
+            "de": "Haltestelle (um gleichnamige Linien zu unterscheiden)",
+            "es": "Parada (para distinguir líneas con el mismo número)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "disrupted",
+          "type": "boolean",
+          "label": {
+            "en": "Disrupted",
+            "fr": "Perturbée",
+            "de": "Gestört",
+            "es": "Con incidencias"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Number of alerts",
+            "fr": "Nombre d'alertes",
+            "de": "Anzahl der Meldungen",
+            "es": "Número de avisos"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "next_departures",
+      "label": {
+        "en": "TEC departures",
+        "fr": "Départs TEC",
+        "de": "TEC-Abfahrten",
+        "es": "Salidas TEC"
+      },
+      "description": {
+        "en": "Departure board of a stop: next buses, delays, disruptions.",
+        "fr": "Tableau des départs d'un arrêt : prochains bus, retards, perturbations.",
+        "de": "Abfahrtstafel einer Haltestelle: nächste Busse, Verspätungen, Störungen.",
+        "es": "Panel de salidas de una parada: próximos buses, retrasos, incidencias."
+      },
+      "icon": "clock",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop",
+            "fr": "Arrêt",
+            "de": "Haltestelle",
+            "es": "Parada"
+          },
+          "required": true
+        }
+      ],
+      "action_timeout_seconds": 45
+    },
+    {
+      "key": "line_disruptions",
+      "label": {
+        "en": "TEC disruptions",
+        "fr": "Perturbations TEC",
+        "de": "TEC-Störungen",
+        "es": "Incidencias TEC"
+      },
+      "description": {
+        "en": "Works, detours and strikes on the lines of your stops.",
+        "fr": "Travaux, déviations et grèves sur les lignes de vos arrêts.",
+        "de": "Bauarbeiten, Umleitungen und Streiks auf den Linien Ihrer Haltestellen.",
+        "es": "Obras, desvíos y huelgas en las líneas de sus paradas."
+      },
+      "icon": "alert-triangle",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Stop (all when empty)",
+            "fr": "Arrêt (tous si vide)",
+            "de": "Haltestelle (alle, wenn leer)",
+            "es": "Parada (todas si está vacío)"
+          }
+        },
+        {
+          "key": "line",
+          "type": "string",
+          "label": {
+            "en": "Line",
+            "fr": "Ligne",
+            "de": "Linie",
+            "es": "Línea"
+          },
+          "description": {
+            "en": "Leave empty for every line.",
+            "fr": "Laissez vide pour toutes les lignes.",
+            "de": "Leer lassen für alle Linien.",
+            "es": "Déjelo vacío para todas las líneas."
+          },
+          "placeholder": {
+            "en": "e.g. 52 or M2",
+            "fr": "ex. 52 ou M2",
+            "de": "z. B. 52 oder M2",
+            "es": "p. ej. 52 o M2"
+          }
+        }
+      ]
+    }
+  ]
+}
