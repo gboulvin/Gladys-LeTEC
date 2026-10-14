@@ -142,7 +142,7 @@ test('dynamic selects declare a source and no static options', () => {
 test('the manifest version is the package version, and the image is tagged with it', () => {
   assert.equal(manifest.version, pkg.version);
   assert.ok(manifest.docker_image.endsWith(`:${manifest.version}`), manifest.docker_image);
-  assert.match(manifest.docker_image, /^ghcr\.io\/gboulvin\/letec:/);
+  assert.match(manifest.docker_image, /^ghcr\.io\/gboulvin\/gladys-letec:/);
 });
 
 test('the catalog description holds 10 to 100 characters per language', () => {

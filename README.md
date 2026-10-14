@@ -74,7 +74,7 @@ See [`CLAUDE.md`](CLAUDE.md) for the architecture and the project rules.
 Describe the changes under `## [Unreleased]` in [`CHANGELOG.md`](CHANGELOG.md),
 then run **Actions → Release** (patch, minor or major): the workflow bumps the
 version in `package.json` and the manifest, tags, builds the multi-arch image
-(`ghcr.io/gboulvin/letec`) and publishes the GitHub Release. The
+(`ghcr.io/gboulvin/gladys-letec`) and publishes the GitHub Release. The
 decentralized Gladys store picks the new version up through the
 `gladys-assistant-integration` topic of the repository.
 

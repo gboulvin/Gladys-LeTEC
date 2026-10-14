@@ -10,6 +10,11 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Changed
+
+- The integration moved to the `gboulvin/Gladys-LeTEC` repository: its image is
+  now `ghcr.io/gboulvin/gladys-letec`.
+
 ## [1.0.0] - 2026-10-14
 
 ### Added
@@ -33,5 +38,5 @@ the notes of the version's GitHub Release.
   real-time data is degraded.
 - Texts, manifest and documentation in English, French, German and Spanish.
 
-[Unreleased]: https://github.com/gboulvin/LeTEC/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/gboulvin/LeTEC/releases/tag/v1.0.0
+[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gboulvin/Gladys-LeTEC/releases/tag/v1.0.0
