@@ -8,8 +8,8 @@
     "de": "Nächste TEC-Busse, Trams und Metros in der Wallonie: Live-Verspätungen und Störungen.",
     "es": "Próximos buses, tranvías y metros TEC en Valonia: retrasos en directo e incidencias."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/gboulvin/gladys-letec:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/gboulvin/gladys-letec:1.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-LeTEC/main/cover.png",
   "categories": ["services"],

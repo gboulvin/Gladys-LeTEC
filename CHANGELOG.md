@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-14
+
 ### Changed
 
 - The integration moved to the `gboulvin/Gladys-LeTEC` repository: its image is
@@ -38,5 +40,6 @@ the notes of the version's GitHub Release.
   real-time data is degraded.
 - Texts, manifest and documentation in English, French, German and Spanish.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-LeTEC/releases/tag/v1.0.0
