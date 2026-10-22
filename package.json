@@ -1,6 +1,6 @@
 {
   "name": "gladys-integration-tec",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Gladys Assistant external integration: next departures, delays and disruptions of the TEC buses, trams and metro of Wallonia.",
   "type": "module",

@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-22
+
 ### Security
 
 - The image is rebuilt on the latest `node:24-alpine` (Node.js and Alpine
@@ -45,6 +47,7 @@ the notes of the version's GitHub Release.
   real-time data is degraded.
 - Texts, manifest and documentation in English, French, German and Spanish.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-LeTEC/releases/tag/v1.0.0
