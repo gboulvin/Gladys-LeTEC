@@ -16,7 +16,7 @@ the Charleroi metro — in [Gladys Assistant](https://gladysassistant.com), with
 - **Dashboard widgets**: departure board of a stop, disruptions of your lines.
 - Stop search by name, or around the houses of Gladys.
 - **Cloud** integration, in English, French, German and Spanish.
-- Requires **Gladys 5.1** or later.
+- Requires **Gladys 5.3** or later.
 
 User documentation: [English](docs/en.md) · [Français](docs/fr.md) ·
 [Deutsch](docs/de.md) · [Español](docs/es.md).
