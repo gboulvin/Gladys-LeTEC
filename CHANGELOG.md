@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-16
+
 ### Fixed
 
 - Stops could not be added from the Discovery screen: Gladys refused their text feature, which had no `min` / `max` ("t_device_feature.min cannot be null"). It now declares `min` / `max` 0, as Gladys requires for a feature without a range.
@@ -60,7 +62,8 @@ the notes of the version's GitHub Release.
   real-time data is degraded.
 - Texts, manifest and documentation in English, French, German and Spanish.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/gboulvin/Gladys-LeTEC/compare/v1.0.0...v1.0.1
