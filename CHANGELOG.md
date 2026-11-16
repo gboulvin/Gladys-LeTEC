@@ -10,6 +10,10 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Fixed
+
+- Stops could not be added from the Discovery screen: Gladys refused their text feature, which had no `min` / `max` ("t_device_feature.min cannot be null"). It now declares `min` / `max` 0, as Gladys requires for a feature without a range.
+
 ## [1.1.0] - 2026-10-26
 
 ### Changed
